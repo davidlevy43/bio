@@ -3,138 +3,327 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Silicon Vibe // Links</title>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <title>SILICON VIBE // FEED</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+
     <style>
         :root {
-            --bg-color: #0d0d0d;
-            --text-color: #e0e0e0;
-            --accent-color: #00ff9d; /* ירוק ניאון */
-            --button-bg: #1a1a1a;
-            --hover-bg: #2a2a2a;
+            --bg-dark: #020b14;
+            --bg-card: #081020;
+            --text-main: #ffffff;
+            --text-muted: #64748b;
+            --accent-cyan: #00d4ff;
+            --accent-glow: rgba(0, 212, 255, 0.15);
+            --border-color: #1e293b;
+            --card-hover: #0f1a30;
         }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
+            background-color: var(--bg-dark);
+            /* רקע עדין של אור כחול כמו בתמונה */
+            background-image: radial-gradient(circle at 50% 0%, #0f2240 0%, var(--bg-dark) 60%);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            padding-bottom: 80px; /* מקום לכפתור התחתון */
+        }
+
+        /* --- Header Section --- */
+        .header {
+            text-align: center;
+            padding: 40px 20px 20px;
+            margin-bottom: 20px;
+        }
+
+        .logo-circle {
+            width: 50px;
+            height: 50px;
+            border: 2px solid var(--accent-cyan);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
             font-family: 'JetBrains Mono', monospace;
+            font-weight: bold;
+            color: var(--text-main);
+            box-shadow: 0 0 15px var(--accent-glow);
+        }
+
+        .main-logo {
+            font-size: 2.5rem;
+            font-weight: 900;
+            letter-spacing: -1px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .logo-vibe {
+            color: var(--accent-cyan);
+            font-style: italic;
+        }
+
+        .status-badge {
+            display: inline-block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: #499ba8;
+            border: 1px solid #1c3b4d;
+            background: #061524;
+            padding: 6px 16px;
+            border-radius: 20px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        /* --- Feed Section --- */
+        .feed-label {
+            max-width: 600px;
+            margin: 0 auto 10px;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .feed-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 0 15px;
             display: flex;
             flex-direction: column;
+            gap: 16px;
+        }
+
+        /* --- Card Design --- */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            display: block; /* For formatting as block inside link */
+        }
+
+        .card:hover {
+            background: var(--card-hover);
+            border-color: #2d3f56;
+            transform: translateY(-2px);
+        }
+
+        /* Card Header: ID & Status */
+        .card-top {
+            display: flex;
+            justify-content: space-between;
             align-items: center;
-            padding: 40px 20px;
-            margin: 0;
-        }
-
-        .profile-section {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-
-        .profile-img {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            border: 2px solid var(--accent-color);
-            object-fit: cover;
             margin-bottom: 15px;
         }
 
-        h1 {
+        .card-id {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: #499ba8;
+        }
+
+        .card-date {
+            display: block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .card-status {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            color: var(--accent-cyan);
+            border: 1px solid #1c3b4d;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        /* Card Title */
+        .card-title {
             font-size: 1.2rem;
-            letter-spacing: -1px;
-            margin: 0;
+            font-weight: 800;
+            line-height: 1.3;
+            color: var(--text-main);
+            margin-bottom: 25px;
+            text-transform: uppercase;
         }
 
-        .tagline {
-            font-size: 0.8rem;
-            color: #888;
-            margin-top: 5px;
-        }
-
-        #links-container {
-            width: 100%;
-            max-width: 600px;
+        /* Card Footer: Source & Arrow */
+        .card-footer {
             display: flex;
-            flex-direction: column;
-            gap: 15px;
+            justify-content: space-between;
+            align-items: flex-end;
+            border-top: 1px solid #ffffff0d;
+            padding-top: 15px;
         }
 
-        .link-card {
-            background: var(--button-bg);
-            color: var(--text-color);
-            text-decoration: none;
-            padding: 18px 20px;
-            border: 1px solid #333;
+        .source-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.6rem;
+            color: var(--text-muted);
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+
+        .source-name {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #b0c4de;
+            text-transform: uppercase;
+        }
+
+        .arrow-box {
+            width: 32px;
+            height: 32px;
+            border: 1px solid #2d3f56;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent-cyan);
+            transition: 0.2s;
+        }
+
+        .card:hover .arrow-box {
+            background: var(--accent-cyan);
+            color: #000;
+            border-color: var(--accent-cyan);
+        }
+
+        /* --- Refresh Button (Floating) --- */
+        .refresh-btn {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(90deg, #00c3ff, #00eaff);
+            color: #000;
+            font-family: 'Inter', sans-serif;
+            font-weight: 900;
+            font-size: 0.9rem;
+            padding: 14px 40px;
             border-radius: 8px;
-            text-align: center;
-            font-weight: bold;
-            transition: all 0.2s ease;
-            position: relative;
-            overflow: hidden;
+            border: none;
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.4);
+            cursor: pointer;
+            z-index: 100;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: transform 0.2s;
         }
 
-        .link-card:hover {
-            background: var(--hover-bg);
-            border-color: var(--accent-color);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(0, 255, 157, 0.15);
+        .refresh-btn:active {
+            transform: translateX(-50%) scale(0.95);
         }
 
-        /* Loading Animation */
         .loader {
-            border: 3px solid #333;
-            border-top: 3px solid var(--accent-color);
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            animation: spin 1s linear infinite;
-            margin: 20px auto;
+            color: var(--accent-cyan);
+            text-align: center;
+            margin-top: 50px;
+            font-family: 'JetBrains Mono', monospace;
         }
 
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
 
-    <div class="profile-section">
-        <img src="YOUR_PROFILE_IMAGE_URL.jpg" alt="Profile" class="profile-img">
-        <h1>SILICON VIBE</h1>
-        <div class="tagline">// NEURAL BROADCAST</div>
+    <header class="header">
+        <div class="logo-circle">SV</div>
+        <div class="main-logo">SILICON <span class="logo-vibe">VIBE</span></div>
+        <div class="status-badge">NEURAL UPLINK ACTIVE</div>
+    </header>
+
+    <div class="feed-label">
+        <span>Live Signal Feed</span>
+        <span style="color: var(--accent-cyan)">● Stable</span>
     </div>
 
-    <div id="links-container">
-        <div class="loader" id="loader"></div>
+    <div id="feed-container" class="feed-container">
+        <div class="loader">ESTABLISHING CONNECTION...</div>
     </div>
+
+    <button class="refresh-btn" onclick="location.reload()">Refresh Uplink</button>
 
     <script>
-        // 👇👇 שים כאן את הלינק שהעתקת מגוגל שיטס (CSV) 👇👇
-        const sheetURL = 'https://docs.google.com/spreadsheets/d/1VU1qo4BZ4cFNbjsHHWqAcO7A5zZx1BiYwDYkbsiId_8/edit?usp=sharing';
+        // 👇👇 שים כאן את הלינק שלך 👇👇
+        const sheetURL = 'YOUR_GOOGLE_SHEET_CSV_LINK_HERE';
 
         Papa.parse(sheetURL, {
             download: true,
             header: true,
             complete: function(results) {
-                const container = document.getElementById('links-container');
-                const loader = document.getElementById('loader');
-                loader.style.display = 'none';
+                const container = document.getElementById('feed-container');
+                container.innerHTML = ''; // Clear loader
 
-                results.data.forEach(row => {
+                // הפוך את הסדר (החדש ביותר למעלה)
+                const posts = results.data.reverse();
+
+                posts.forEach((row, index) => {
+                    // מוודא שיש שורה עם תוכן
                     if(row.Title && row.URL) {
-                        const link = document.createElement('a');
-                        link.href = row.URL;
-                        link.className = 'link-card';
-                        link.innerText = row.Title;
-                        link.target = "_blank"; // פותח בטאב חדש
-                        container.appendChild(link);
+                        // חישוב מזהה פיקטיבי (ID // 01)
+                        // index מתחיל מ-0, אז נוסיף 1 כדי שיהיה יפה
+                        let displayId = String(posts.length - index).padStart(2, '0');
+
+                        // יצירת ה-HTML לכרטיס
+                        const card = document.createElement('a');
+                        card.href = row.URL;
+                        card.className = 'card';
+                        card.target = "_blank"; // פתיחה בטאב חדש
+
+                        card.innerHTML = `
+                            <div class="card-top">
+                                <div>
+                                    <div class="card-id">ID // ${displayId}</div>
+                                    <span class="card-date">${row.Date || 'UNKNOWN DATE'}</span>
+                                </div>
+                                <div class="card-status">ONLINE</div>
+                            </div>
+                            
+                            <div class="card-title">${row.Title}</div>
+                            
+                            <div class="card-footer">
+                                <div>
+                                    <div class="source-label">SOURCE NODE</div>
+                                    <div class="source-name">${row.Source || 'SYSTEM'}</div>
+                                </div>
+                                <div class="arrow-box">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                        <line x1="7" y1="17" x2="17" y2="7"></line>
+                                        <polyline points="7 7 17 7 17 17"></polyline>
+                                    </svg>
+                                </div>
+                            </div>
+                        `;
+                        
+                        container.appendChild(card);
                     }
                 });
             },
             error: function(err) {
-                console.error("Error loading sheet:", err);
-                document.getElementById('links-container').innerHTML = "<p>Error loading transmission...</p>";
+                console.error("Error:", err);
+                document.getElementById('feed-container').innerHTML = 
+                    '<p style="text-align:center; color:red">UPLINK FAILED.</p>';
             }
         });
     </script>
+
 </body>
 </html>
