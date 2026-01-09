@@ -1,329 +1,299 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SILICON VIBE // FEED</title>
+    <title>SILICON VIBE // BIO-SIGNAL</title>
     
+    <!-- Utilities -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;300;400;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- React & ReactDOM (UMD - Critical for no-build stability) -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    
+    <!-- Babel for on-the-fly JSX transpilation -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
     <style>
         :root {
-            --bg-dark: #020b14;
-            --bg-card: #081020;
-            --text-main: #ffffff;
-            --text-muted: #64748b;
-            --accent-cyan: #00d4ff;
-            --accent-glow: rgba(0, 212, 255, 0.15);
-            --border-color: #1e293b;
-            --card-hover: #0f1a30;
+            --space: #020617;
+            --cyan: #06b6d4;
+            --indigo: #4f46e5;
         }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-
-        body {
-            background-color: var(--bg-dark);
-            /* רקע עדין של אור כחול כמו בתמונה */
-            background-image: radial-gradient(circle at 50% 0%, #0f2240 0%, var(--bg-dark) 60%);
-            color: var(--text-main);
-            font-family: 'Inter', sans-serif;
-            min-height: 100vh;
-            padding-bottom: 80px; /* מקום לכפתור התחתון */
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: var(--space); 
+            margin: 0; 
+            color: #f8fafc;
+            overflow-x: hidden;
         }
-
-        /* --- Header Section --- */
-        .header {
-            text-align: center;
-            padding: 40px 20px 20px;
-            margin-bottom: 20px;
-        }
-
-        .logo-circle {
-            width: 50px;
-            height: 50px;
-            border: 2px solid var(--accent-cyan);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 15px;
-            font-family: 'JetBrains Mono', monospace;
-            font-weight: bold;
-            color: var(--text-main);
-            box-shadow: 0 0 15px var(--accent-glow);
-        }
-
-        .main-logo {
-            font-size: 2.5rem;
-            font-weight: 900;
-            letter-spacing: -1px;
-            text-transform: uppercase;
-            margin-bottom: 10px;
-        }
-
-        .logo-vibe {
-            color: var(--accent-cyan);
-            font-style: italic;
-        }
-
-        .status-badge {
-            display: inline-block;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.75rem;
-            color: #499ba8;
-            border: 1px solid #1c3b4d;
-            background: #061524;
-            padding: 6px 16px;
-            border-radius: 20px;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-        }
-
-        /* --- Feed Section --- */
-        .feed-label {
-            max-width: 600px;
-            margin: 0 auto 10px;
-            padding: 0 20px;
-            display: flex;
-            justify-content: space-between;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.7rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .feed-container {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 0 15px;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        /* --- Card Design --- */
-        .card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 20px;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            display: block; /* For formatting as block inside link */
-        }
-
-        .card:hover {
-            background: var(--card-hover);
-            border-color: #2d3f56;
-            transform: translateY(-2px);
-        }
-
-        /* Card Header: ID & Status */
-        .card-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .card-id {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.75rem;
-            color: #499ba8;
-        }
-
-        .card-date {
-            display: block;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.65rem;
-            color: var(--text-muted);
-            margin-top: 4px;
-        }
-
-        .card-status {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.65rem;
-            color: var(--accent-cyan);
-            border: 1px solid #1c3b4d;
-            padding: 2px 8px;
-            border-radius: 4px;
-        }
-
-        /* Card Title */
-        .card-title {
-            font-size: 1.2rem;
-            font-weight: 800;
-            line-height: 1.3;
-            color: var(--text-main);
-            margin-bottom: 25px;
-            text-transform: uppercase;
-        }
-
-        /* Card Footer: Source & Arrow */
-        .card-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-            border-top: 1px solid #ffffff0d;
-            padding-top: 15px;
-        }
-
-        .source-label {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.6rem;
-            color: var(--text-muted);
-            letter-spacing: 1px;
-            margin-bottom: 4px;
-        }
-
-        .source-name {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.8rem;
-            font-weight: 700;
-            color: #b0c4de;
-            text-transform: uppercase;
-        }
-
-        .arrow-box {
-            width: 32px;
-            height: 32px;
-            border: 1px solid #2d3f56;
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--accent-cyan);
-            transition: 0.2s;
-        }
-
-        .card:hover .arrow-box {
-            background: var(--accent-cyan);
-            color: #000;
-            border-color: var(--accent-cyan);
-        }
-
-        /* --- Refresh Button (Floating) --- */
-        .refresh-btn {
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        
+        .bg-mesh {
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(6, 182, 212, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 80% 80%, rgba(79, 70, 229, 0.1) 0%, transparent 40%);
             position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: linear-gradient(90deg, #00c3ff, #00eaff);
-            color: #000;
-            font-family: 'Inter', sans-serif;
-            font-weight: 900;
-            font-size: 0.9rem;
-            padding: 14px 40px;
-            border-radius: 8px;
-            border: none;
-            box-shadow: 0 0 20px rgba(0, 212, 255, 0.4);
-            cursor: pointer;
-            z-index: 100;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            transition: transform 0.2s;
+            inset: 0;
+            z-index: -1;
         }
 
-        .refresh-btn:active {
-            transform: translateX(-50%) scale(0.95);
+        .glass {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .loader {
-            color: var(--accent-cyan);
-            text-align: center;
-            margin-top: 50px;
-            font-family: 'JetBrains Mono', monospace;
+        .glass:hover {
+            border-color: rgba(6, 182, 212, 0.4);
+            background: rgba(255, 255, 255, 0.05);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px -10px rgba(6, 182, 212, 0.2);
         }
 
+        @keyframes pulse-neon {
+            0%, 100% { box-shadow: 0 0 10px rgba(6, 182, 212, 0.2), inset 0 0 5px rgba(6, 182, 212, 0.1); }
+            50% { box-shadow: 0 0 25px rgba(6, 182, 212, 0.4), inset 0 0 10px rgba(6, 182, 212, 0.2); }
+        }
+
+        .neon-ring {
+            animation: pulse-neon 3s infinite ease-in-out;
+        }
+
+        .scanline {
+            width: 100%;
+            height: 100px;
+            z-index: 10;
+            background: linear-gradient(0deg, transparent 0%, rgba(6, 182, 212, 0.03) 50%, transparent 100%);
+            position: fixed;
+            pointer-events: none;
+            animation: scan 8s linear infinite;
+        }
+
+        @keyframes scan {
+            0% { transform: translateY(-100vh); }
+            100% { transform: translateY(100vh); }
+        }
+
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        ::-webkit-scrollbar { display: none; }
     </style>
+<script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@^19.2.3",
+    "react/": "https://esm.sh/react@^19.2.3/"
+  }
+}
+</script>
 </head>
 <body>
+    <div id="root"></div>
+    <div class="bg-mesh"></div>
+    <div class="scanline"></div>
 
-    <header class="header">
-        <div class="logo-circle">SV</div>
-        <div class="main-logo">SILICON <span class="logo-vibe">VIBE</span></div>
-        <div class="status-badge">NEURAL UPLINK ACTIVE</div>
-    </header>
+    <script type="text/babel">
+        // Use global React and ReactDOM provided by UMD scripts
+        const { useState, useEffect, useMemo } = React;
 
-    <div class="feed-label">
-        <span>Live Signal Feed</span>
-        <span style="color: var(--accent-cyan)">● Stable</span>
-    </div>
-
-    <div id="feed-container" class="feed-container">
-        <div class="loader">ESTABLISHING CONNECTION...</div>
-    </div>
-
-    <button class="refresh-btn" onclick="location.reload()">Refresh Uplink</button>
-
-    <script>
-        // 👇👇 שים כאן את הלינק שלך 👇👇
-        const sheetURL = 'YOUR_GOOGLE_SHEET_CSV_LINK_HERE';
-
-        Papa.parse(sheetURL, {
-            download: true,
-            header: true,
-            complete: function(results) {
-                const container = document.getElementById('feed-container');
-                container.innerHTML = ''; // Clear loader
-
-                // הפוך את הסדר (החדש ביותר למעלה)
-                const posts = results.data.reverse();
-
-                posts.forEach((row, index) => {
-                    // מוודא שיש שורה עם תוכן
-                    if(row.Title && row.URL) {
-                        // חישוב מזהה פיקטיבי (ID // 01)
-                        // index מתחיל מ-0, אז נוסיף 1 כדי שיהיה יפה
-                        let displayId = String(posts.length - index).padStart(2, '0');
-
-                        // יצירת ה-HTML לכרטיס
-                        const card = document.createElement('a');
-                        card.href = row.URL;
-                        card.className = 'card';
-                        card.target = "_blank"; // פתיחה בטאב חדש
-
-                        card.innerHTML = `
-                            <div class="card-top">
-                                <div>
-                                    <div class="card-id">ID // ${displayId}</div>
-                                    <span class="card-date">${row.Date || 'UNKNOWN DATE'}</span>
-                                </div>
-                                <div class="card-status">ONLINE</div>
-                            </div>
-                            
-                            <div class="card-title">${row.Title}</div>
-                            
-                            <div class="card-footer">
-                                <div>
-                                    <div class="source-label">SOURCE NODE</div>
-                                    <div class="source-name">${row.Source || 'SYSTEM'}</div>
-                                </div>
-                                <div class="arrow-box">
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                                        <line x1="7" y1="17" x2="17" y2="7"></line>
-                                        <polyline points="7 7 17 7 17 17"></polyline>
-                                    </svg>
-                                </div>
-                            </div>
-                        `;
-                        
-                        container.appendChild(card);
-                    }
-                });
-            },
-            error: function(err) {
-                console.error("Error:", err);
-                document.getElementById('feed-container').innerHTML = 
-                    '<p style="text-align:center; color:red">UPLINK FAILED.</p>';
+        // CSV Parsing Utility
+        const parseCSV = (text) => {
+            const rows = [];
+            let row = [];
+            let cell = '';
+            let inQuotes = false;
+            for (let i = 0; i < text.length; i++) {
+                const char = text[i];
+                if (inQuotes) {
+                    if (char === '"' && text[i+1] === '"') { cell += '"'; i++; }
+                    else if (char === '"') inQuotes = false;
+                    else cell += char;
+                } else {
+                    if (char === '"') inQuotes = true;
+                    else if (char === ',') { row.push(cell); cell = ''; }
+                    else if (char === '\n' || char === '\r') {
+                        row.push(cell);
+                        if (row.length > 0) rows.push(row);
+                        row = []; cell = '';
+                        if (char === '\r' && text[i+1] === '\n') i++;
+                    } else cell += char;
+                }
             }
-        });
-    </script>
+            if (cell || row.length) { row.push(cell); rows.push(row); }
+            return rows;
+        };
 
+        const fetchSheetData = async () => {
+            const sheetId = '1VU1qo4BZ4cFNbjsHHWqAcO7A5zZx1BiYwDYkbsiId_8';
+            const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv`;
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('UPLINK_FAILURE');
+            const text = await response.text();
+            const rows = parseCSV(text);
+            
+            // Expected headers: Date, Headline, Source, URL
+            return rows.slice(1).map((r, i) => ({
+                id: i,
+                date: r[0],
+                title: r[1],
+                source: r[2],
+                url: r[3]?.trim().startsWith('http') ? r[3].trim() : `https://${r[3]?.trim()}`
+            })).filter(r => r.title);
+        };
+
+        const BootSequence = ({ onComplete }) => {
+            const [progress, setProgress] = useState(0);
+            const logs = useMemo(() => [
+                "> INITIALIZING NEURAL INTERFACE...",
+                "> CONNECTING TO BIOMETRIC STREAM...",
+                "> DECRYPTING CSV_UPLINK_001...",
+                "> SYNCING RECENT CHRONICLES...",
+                "> ACCESS GRANTED."
+            ], []);
+
+            useEffect(() => {
+                const timer = setInterval(() => {
+                    setProgress(p => {
+                        if (p >= 100) {
+                            clearInterval(timer);
+                            setTimeout(onComplete, 500);
+                            return 100;
+                        }
+                        return p + 2;
+                    });
+                }, 30);
+                return () => clearInterval(timer);
+            }, []);
+
+            const currentLogIndex = Math.floor((progress / 100) * (logs.length - 1));
+
+            return (
+                <div className="fixed inset-0 z-[100] bg-[#020617] flex items-center justify-center p-8">
+                    <div className="w-full max-w-sm">
+                        <div className="mb-12 flex justify-center">
+                            <div className="w-16 h-16 rounded-full border-2 border-cyan-500/50 flex items-center justify-center neon-ring">
+                                <span className="font-black text-xl text-cyan-400">SV</span>
+                            </div>
+                        </div>
+                        <div className="mono text-[10px] text-cyan-500/60 uppercase tracking-widest h-20">
+                            {logs.slice(0, currentLogIndex + 1).map((l, i) => (
+                                <div key={i} className={i === currentLogIndex ? "text-cyan-400" : ""}>{l}</div>
+                            ))}
+                        </div>
+                        <div className="mt-8 h-1 w-full bg-white/5 rounded-full overflow-hidden">
+                            <div className="h-full bg-cyan-500 transition-all duration-100" style={{width: `${progress}%`}} />
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const SignalCard = ({ signal }) => (
+            <a 
+                href={signal.url} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="group block p-6 rounded-2xl glass mb-4 relative overflow-hidden"
+            >
+                <div className="flex justify-between items-start mb-4">
+                    <div className="flex flex-col">
+                        <span className="mono text-[9px] font-bold text-cyan-500/50 uppercase tracking-[0.3em]">Signal_{signal.id}</span>
+                        <span className="mono text-[10px] text-white/20 mt-1 uppercase">{signal.date}</span>
+                    </div>
+                    <div className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center group-hover:border-cyan-500/50 group-hover:bg-cyan-500/10 transition-all">
+                        <svg className="w-4 h-4 text-white/20 group-hover:text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                        </svg>
+                    </div>
+                </div>
+                <h2 className="text-xl font-black text-white group-hover:text-cyan-400 transition-colors uppercase leading-tight mb-4 tracking-tight">
+                    {signal.title}
+                </h2>
+                <div className="pt-4 border-t border-white/5 flex items-center justify-between">
+                    <span className="mono text-[10px] font-bold text-white/40 uppercase tracking-widest">{signal.source}</span>
+                    <span className="text-[9px] font-black text-cyan-500/40 uppercase tracking-[0.2em] group-hover:opacity-100 opacity-0 transition-opacity">External Link // Secure</span>
+                </div>
+            </a>
+        );
+
+        const App = () => {
+            const [booting, setBooting] = useState(true);
+            const [signals, setSignals] = useState([]);
+            const [loading, setLoading] = useState(true);
+
+            useEffect(() => {
+                const load = async () => {
+                    try {
+                        const data = await fetchSheetData();
+                        setSignals(data);
+                    } catch (e) {
+                        console.error(e);
+                    } finally {
+                        setLoading(false);
+                    }
+                };
+                load();
+            }, []);
+
+            if (booting) return <BootSequence onComplete={() => setBooting(false)} />;
+
+            return (
+                <div className="min-h-screen flex flex-col items-center py-12 px-6">
+                    <header className="mb-16 text-center">
+                        <div className="mb-8 flex justify-center">
+                            <div className="w-20 h-20 rounded-full border-2 border-cyan-500 flex items-center justify-center neon-ring bg-slate-950">
+                                <span className="font-black text-2xl text-white">SV</span>
+                            </div>
+                        </div>
+                        <h1 className="text-5xl md:text-7xl font-black text-white tracking-tighter uppercase mb-4 leading-none">
+                            SILICON <span className="text-cyan-500 italic">VIBE</span>
+                        </h1>
+                        <div className="flex items-center justify-center space-x-3 text-[10px] font-bold text-cyan-500/50 uppercase tracking-[0.5em] bg-cyan-500/5 px-6 py-2 rounded-full border border-cyan-500/20 mx-auto w-fit">
+                            <span className="w-2 h-2 rounded-full bg-cyan-500 animate-pulse" />
+                            <span>System Status: Online</span>
+                        </div>
+                    </header>
+
+                    <main className="w-full max-w-xl pb-24">
+                        {loading ? (
+                            <div className="space-y-4">
+                                {[1,2,3].map(i => <div key={i} className="h-40 rounded-2xl glass animate-pulse" />)}
+                            </div>
+                        ) : (
+                            signals.map(s => <SignalCard key={s.id} signal={s} />)
+                        )}
+                        
+                        {!loading && signals.length === 0 && (
+                            <div className="text-center py-20 glass rounded-3xl border-dashed border-white/10">
+                                <p className="mono text-[10px] text-white/20 uppercase tracking-[0.4em]">No active signals found in the matrix.</p>
+                            </div>
+                        )}
+                    </main>
+
+                    <footer className="mt-auto opacity-20 text-center py-8">
+                        <p className="mono text-[9px] uppercase tracking-[0.5em]">Silicon Vibe // Bio-Signal Transmission Protocol v4.0</p>
+                    </footer>
+
+                    <div className="fixed bottom-8 left-0 right-0 px-6 z-40 flex justify-center">
+                        <button 
+                            onClick={() => window.location.reload()}
+                            className="w-full max-w-sm glass border-cyan-500/30 bg-cyan-500/10 py-5 rounded-2xl font-black text-white uppercase tracking-widest text-xs hover:bg-cyan-500/20 active:scale-95 transition-all shadow-2xl"
+                        >
+                            Synchronize Uplink
+                        </button>
+                    </div>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
 </body>
 </html>
